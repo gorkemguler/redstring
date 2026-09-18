@@ -1,0 +1,71 @@
+<!doctype html>
+<!-- Redstring README banner'ının kaynağı. Yeniden üretmek için:
+     Microsoft Edge / Chrome --headless=new --screenshot=docs/banner.png --window-size=1280,340
+     The source of the README banner; re-render it with a headless Chromium screenshot. -->
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+  *{box-sizing:border-box; margin:0}
+  body{
+    width:1280px; height:340px; background:#131519; color:#E8EAED; overflow:hidden;
+    font-family:"IBM Plex Sans", system-ui, sans-serif; position:relative;
+    display:flex; align-items:center;
+  }
+  .stripe{position:absolute; inset:0 0 auto 0; height:5px; background:#A8322D; z-index:3}
+  .grid{position:absolute; inset:0; background-image:radial-gradient(circle,#2C313A 1px,transparent 1px); background-size:26px 26px; opacity:.85}
+  .left{position:relative; z-index:2; padding:0 0 0 68px; width:660px}
+  h1{font-family:"IBM Plex Sans Condensed", sans-serif; font-weight:700; font-size:70px; line-height:1; letter-spacing:-.01em}
+  .kicker{font-family:"IBM Plex Mono", monospace; font-size:12.5px; letter-spacing:.22em; text-transform:uppercase; color:#D9736C; margin-bottom:16px}
+  .sub{font-size:18px; color:#99A1AD; margin-top:16px; line-height:1.45; max-width:530px}
+  .sub b{color:#E8EAED; font-weight:500}
+  .meta{display:flex; gap:9px; margin-top:24px; flex-wrap:wrap}
+  .pill{font-family:"IBM Plex Mono", monospace; font-size:11px; letter-spacing:.07em; color:#99A1AD;
+        border:1px solid #2C313A; border-radius:99px; padding:4px 11px; background:#1B1E24}
+  .board{position:absolute; right:0; top:0; width:560px; height:340px; z-index:1}
+  svg{position:absolute; inset:0; width:100%; height:100%}
+  svg line{stroke:#A8322D; stroke-width:1.4; opacity:.7}
+  .pin{position:absolute; transform:translate(-50%,-50%); background:#1B1E24; border:1px solid #3A414C;
+       border-top:3px solid var(--rc); border-radius:4px; padding:6px 11px 7px; text-align:center;
+       box-shadow:0 10px 28px -18px rgba(0,0,0,.9); min-width:104px}
+  .pn{font-family:"IBM Plex Sans Condensed", sans-serif; font-weight:600; font-size:13px; line-height:1.2}
+  .pr{font-family:"IBM Plex Mono", monospace; font-size:9px; color:#727A87; letter-spacing:.06em; text-transform:uppercase; margin-top:1px}
+  .fade{position:absolute; inset:0 auto 0 0; width:190px; background:linear-gradient(90deg,#131519 22%,rgba(19,21,25,0))}
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="stripe"></div>
+
+  <div class="board">
+    <svg>
+      <line x1="30%" y1="24%" x2="58%" y2="52%"></line>
+      <line x1="58%" y1="52%" x2="84%" y2="26%"></line>
+      <line x1="58%" y1="52%" x2="36%" y2="80%"></line>
+      <line x1="84%" y1="26%" x2="80%" y2="76%"></line>
+      <line x1="36%" y1="80%" x2="80%" y2="76%"></line>
+    </svg>
+    <div class="pin" style="--rc:#5FB3AC; left:30%; top:24%"><div class="pn">Client</div><div class="pr">Müvekkil</div></div>
+    <div class="pin" style="--rc:#E0776F; left:58%; top:52%"><div class="pn">Subject</div><div class="pr">Şüpheli</div></div>
+    <div class="pin" style="--rc:#D2A644; left:84%; top:26%"><div class="pn">Witness</div><div class="pr">Tanık</div></div>
+    <div class="pin" style="--rc:#8B94A3; left:36%; top:80%"><div class="pn">Other</div><div class="pr">İlgili</div></div>
+    <div class="pin" style="--rc:#E0776F; left:80%; top:76%"><div class="pn">Evidence</div><div class="pr">Delil</div></div>
+    <div class="fade"></div>
+  </div>
+
+  <div class="left">
+    <div class="kicker">CF-2026-014 · case open</div>
+    <h1>Redstring</h1>
+    <p class="sub"><b>Case management for private investigators.</b><br>
+      Özel araştırmacılar için vaka dosyası sistemi.</p>
+    <div class="meta">
+      <span class="pill">PEOPLE</span>
+      <span class="pill">CHAIN OF EVIDENCE</span>
+      <span class="pill">TIMELINE</span>
+      <span class="pill">FIELD HOURS</span>
+      <span class="pill">LINK CHART</span>
+    </div>
+  </div>
+</body>
+</html>

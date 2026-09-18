@@ -1,0 +1,23 @@
+<!doctype html>
+<!-- README'deki mobil ekran görüntüsünün kaynağı: uygulamayı sabit 390px genişlikte
+     bir çerçeveye alır, böylece çekim tarayıcı pencere boyutundan etkilenmez.
+     Source of the README's mobile screenshot: frames the app at a fixed 390px width
+     so the capture does not depend on the browser's window size. -->
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  html,body{margin:0; height:100%; background:#E4E6EA;
+            display:flex; align-items:center; justify-content:center}
+  .phone{width:390px; height:844px; border-radius:26px; overflow:hidden;
+         border:1px solid #C3C8D0; background:#fff;
+         box-shadow:0 30px 60px -30px rgba(24,27,33,.45)}
+  iframe{width:390px; height:844px; border:0; display:block}
+</style>
+</head>
+<body>
+  <div class="phone">
+    <iframe src="../index.html?demo=1&lang=tr&tab=taraflar&theme=light" title="Redstring"></iframe>
+  </div>
+</body>
+</html>

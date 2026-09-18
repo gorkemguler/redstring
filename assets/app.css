@@ -1,0 +1,277 @@
+/* Redstring — özel araştırma dosya sistemi
+   Palet: kâğıt/mürekkep nötrleri + dosya kırmızısı aksan.
+   Tipografi: IBM Plex Sans Condensed (başlık), Sans (metin), Mono (veri). */
+
+:root{
+  --paper:#F2F3F5; --surface:#FFFFFF; --surface-2:#EAECEF;
+  --ink:#181B21; --muted:#606875; --faint:#8A919C;
+  --line:#DCDFE4; --line-strong:#C3C8D0;
+  --accent:#A8322D;
+  --st-open:#1F6F6B; --st-hot:#A8322D; --st-hold:#8A6414; --st-closed:#5B6472;
+  --shadow:0 1px 2px rgba(24,27,33,.06), 0 8px 24px -16px rgba(24,27,33,.22);
+  --r:6px;
+  --f-disp:"IBM Plex Sans Condensed","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131519; --surface:#1B1E24; --surface-2:#232830;
+    --ink:#E8EAED; --muted:#99A1AD; --faint:#727A87;
+    --line:#2C313A; --line-strong:#3A414C;
+    --accent:#D9736C;
+    --st-open:#5FB3AC; --st-hot:#E0776F; --st-hold:#D2A644; --st-closed:#8B94A3;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131519; --surface:#1B1E24; --surface-2:#232830;
+  --ink:#E8EAED; --muted:#99A1AD; --faint:#727A87;
+  --line:#2C313A; --line-strong:#3A414C;
+  --accent:#D9736C;
+  --st-open:#5FB3AC; --st-hot:#E0776F; --st-hold:#D2A644; --st-closed:#8B94A3;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+}
+
+html,body{height:100%}
+body{
+  margin:0; padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);
+  background:var(--paper); color:var(--ink);
+  font-family:var(--f-body); font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+*,*::before,*::after{box-sizing:border-box}
+img{max-width:100%}
+[hidden]{display:none !important}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important; transition-duration:.01ms !important}}
+
+.eyebrow{font-family:var(--f-disp); font-weight:600; font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--faint)}
+.mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+.visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* ---------- kabuk ---------- */
+#app{display:flex; flex-direction:column; height:100%}
+
+.topbar{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:10px 16px; background:var(--surface); border-bottom:1px solid var(--line);
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
+}
+.brand{display:flex; align-items:baseline; gap:9px; margin-right:auto}
+.brand h1{font-family:var(--f-disp); font-weight:700; font-size:19px; margin:0}
+.brand .tag{font-family:var(--f-mono); font-size:10.5px; color:var(--faint); letter-spacing:.04em}
+.topbar .stats{display:flex; gap:14px; font-family:var(--f-mono); font-size:11px; color:var(--muted)}
+.topbar .stats b{color:var(--ink); font-weight:600}
+.topactions{display:flex; align-items:center; gap:6px}
+.langbtn{font-family:var(--f-mono); font-weight:500; letter-spacing:.06em; min-width:34px}
+
+.btn{
+  border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);
+  padding:6px 12px; border-radius:var(--r); cursor:pointer;
+  font-family:var(--f-disp); font-weight:600; font-size:13px; letter-spacing:.01em;
+  transition:background .12s ease, border-color .12s ease;
+}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{border-color:transparent; background:transparent; color:var(--muted)}
+.btn.ghost:hover{background:var(--surface-2); color:var(--ink)}
+.btn.sm{padding:3px 9px; font-size:12px}
+.btn.danger:hover{border-color:var(--accent); color:var(--accent); background:transparent}
+
+.layout{flex:1; display:grid; grid-template-columns:302px 1fr; min-height:0}
+
+/* ---------- vaka rayı ---------- */
+.rail{border-right:1px solid var(--line); background:var(--surface); display:flex; flex-direction:column; min-height:0}
+.rail-head{padding:12px 14px 10px; display:flex; flex-direction:column; gap:9px; border-bottom:1px solid var(--line)}
+.search{width:100%; padding:7px 10px; border:1px solid var(--line-strong); border-radius:var(--r); background:var(--paper); font-size:13px}
+.filters{display:flex; gap:4px; flex-wrap:wrap}
+.filters button{
+  border:1px solid transparent; background:transparent; color:var(--muted);
+  font-family:var(--f-disp); font-weight:600; font-size:11px; letter-spacing:.05em;
+  text-transform:uppercase; padding:3px 7px; border-radius:99px; cursor:pointer;
+}
+.filters button[aria-pressed="true"]{background:var(--surface-2); color:var(--ink); border-color:var(--line-strong)}
+.rail-foot{padding:9px 14px; border-top:1px solid var(--line); font-size:11px; color:var(--faint)}
+
+#caseList{list-style:none; margin:0; padding:8px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; flex:1}
+.case-card{
+  width:100%; text-align:left; cursor:pointer; background:var(--surface); font-family:inherit;
+  border:1px solid var(--line); border-left:3px solid var(--prio,var(--st-closed));
+  border-radius:var(--r); padding:9px 11px; display:flex; flex-direction:column; gap:5px;
+}
+.case-card:hover{border-color:var(--line-strong); background:var(--surface-2)}
+.case-card[aria-current="true"]{background:var(--surface-2); border-color:var(--line-strong); box-shadow:inset 0 0 0 1px var(--line-strong)}
+.case-card .row1{display:flex; align-items:center; gap:8px}
+.case-card .code{font-family:var(--f-mono); font-size:10.5px; color:var(--faint); letter-spacing:.03em}
+.case-card .title{font-family:var(--f-disp); font-weight:600; font-size:14.5px; line-height:1.25; text-wrap:balance}
+.case-card .meta{display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--muted)}
+
+.chip{
+  display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+  font-family:var(--f-disp); font-weight:600; font-size:10.5px;
+  letter-spacing:.07em; text-transform:uppercase; padding:2px 7px; border-radius:99px;
+  color:var(--c); background:color-mix(in srgb, var(--c) 13%, transparent);
+  border:1px solid color-mix(in srgb, var(--c) 32%, transparent);
+}
+.chip .dot{width:5px; height:5px; border-radius:99px; background:currentColor}
+
+/* ---------- dosya ---------- */
+.main{min-height:0; overflow-y:auto}
+.wrap{max-width:1040px; margin:0 auto; padding-block:18px 56px; padding-inline:16px}
+
+.dossier-head{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+.classbar{height:4px; background:var(--prio,var(--st-closed))}
+.dossier-head .body{padding:16px 18px 14px; display:flex; flex-direction:column; gap:12px}
+.dossier-head .line1{display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap}
+.dossier-head h2{font-family:var(--f-disp); font-weight:700; font-size:25px; line-height:1.15; margin:2px 0 0; text-wrap:balance}
+.dossier-head .code{font-family:var(--f-mono); font-size:11.5px; color:var(--accent); letter-spacing:.06em; font-weight:500}
+.dossier-head .actions{margin-left:auto; display:flex; gap:6px; align-self:center; flex-wrap:wrap}
+.summary{color:var(--muted); max-width:66ch; margin:0; white-space:pre-wrap}
+
+/* Ayırıcılar gölgeyle çizilir: ızgaranın son satırında boş hücre kalsa bile
+   arka plan görünmez. Separators are drawn with shadows so a ragged last row
+   leaves no visible empty cell. */
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); background:var(--surface); border-top:1px solid var(--line)}
+.fact{background:var(--surface); padding:9px 18px 11px; display:flex; flex-direction:column; gap:2px; min-width:0;
+      box-shadow:1px 0 0 var(--line), 0 1px 0 var(--line)}
+.fact .v{font-family:var(--f-mono); font-size:14px; font-weight:500; font-variant-numeric:tabular-nums; min-width:0}
+
+.ident{display:flex; gap:10px 30px; flex-wrap:wrap; padding-top:2px}
+.ident > div{display:flex; flex-direction:column; gap:1px; min-width:0}
+.ident .iv{font-size:14px; font-weight:500; overflow-wrap:anywhere}
+
+.tabs{display:flex; gap:2px; margin:20px 0 0; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  border:0; background:transparent; cursor:pointer; white-space:nowrap;
+  font-family:var(--f-disp); font-weight:600; font-size:13px; letter-spacing:.03em;
+  color:var(--muted); padding:8px 12px; border-bottom:2px solid transparent; margin-bottom:-1px;
+}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--accent)}
+.tabs .count{font-family:var(--f-mono); font-size:10.5px; color:var(--faint); margin-left:5px}
+
+.panel-head{display:flex; align-items:center; gap:10px; margin:16px 0 10px; flex-wrap:wrap}
+.panel-head .eyebrow{margin-right:auto}
+.hint{font-size:12px; color:var(--muted); margin-right:auto}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:10px}
+.item{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:12px 13px; display:flex; flex-direction:column; gap:7px}
+.item .ihead{display:flex; align-items:flex-start; gap:8px}
+.item .iname{font-family:var(--f-disp); font-weight:600; font-size:15px; line-height:1.25}
+.item .tools{margin-left:auto; display:flex; gap:2px; opacity:.55}
+.item:hover .tools,.item:focus-within .tools{opacity:1}
+.icobtn{border:0; background:transparent; cursor:pointer; color:var(--muted); padding:2px 5px; border-radius:4px; font-size:12px; line-height:1}
+.icobtn:hover{background:var(--surface-2); color:var(--ink)}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:3px 10px; font-size:12.5px; margin:0}
+.kv dt{color:var(--faint); font-family:var(--f-disp); font-weight:600; letter-spacing:.04em; text-transform:uppercase; font-size:10.5px; padding-top:2px}
+.kv dd{margin:0; overflow-wrap:anywhere}
+.note{font-size:12.5px; color:var(--muted); border-top:1px dashed var(--line); padding-top:7px; margin:0; white-space:pre-wrap}
+
+/* kronoloji */
+.tl{display:flex; flex-direction:column; border-left:2px solid var(--line); margin-left:8px}
+.tl-item{position:relative; padding:0 0 18px 20px}
+.tl-item::before{content:""; position:absolute; left:-6px; top:5px; width:10px; height:10px; border-radius:99px; background:var(--surface); border:2px solid var(--accent)}
+.tl-item .when{font-family:var(--f-mono); font-size:11px; color:var(--faint); letter-spacing:.03em}
+.tl-item .what{font-family:var(--f-disp); font-weight:600; font-size:15px; margin-top:1px; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.tl-item .what .tools{opacity:.5}
+.tl-item:hover .what .tools{opacity:1}
+.tl-item .where{font-size:12px; color:var(--muted)}
+.tl-item p{margin:5px 0 0; font-size:13px; color:var(--muted); white-space:pre-wrap}
+
+/* saha kaydı */
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:520px; font-size:13px}
+th{text-align:left; font-family:var(--f-disp); font-weight:600; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); padding:9px 12px; border-bottom:1px solid var(--line); white-space:nowrap}
+td{padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right; font-family:var(--f-mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+tfoot td{font-family:var(--f-mono); font-weight:600; border-top:1px solid var(--line-strong); background:var(--surface-2)}
+
+/* bağlantı şeması */
+.board{
+  position:relative; width:100%; aspect-ratio:16/10; min-height:340px; max-width:100%;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  background-image:radial-gradient(circle, var(--line) 1px, transparent 1px);
+  background-size:22px 22px; overflow:hidden; touch-action:none;
+}
+.board svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+.board svg line{stroke:var(--accent); stroke-width:1.5; opacity:.75}
+.board svg text{fill:var(--muted); font-family:var(--f-mono); font-size:9.5px; text-anchor:middle; paint-order:stroke; stroke:var(--surface); stroke-width:3px}
+.pin{
+  position:absolute; transform:translate(-50%,-50%); cursor:grab;
+  background:var(--surface); border:1px solid var(--line-strong); border-top:3px solid var(--rc,var(--st-closed));
+  border-radius:4px; padding:5px 9px 6px; box-shadow:var(--shadow);
+  min-width:96px; max-width:150px; text-align:center; user-select:none;
+}
+.pin:active{cursor:grabbing}
+.pin .pn{font-family:var(--f-disp); font-weight:600; font-size:12.5px; line-height:1.2}
+.pin .pr{font-family:var(--f-mono); font-size:9.5px; color:var(--faint); letter-spacing:.05em; text-transform:uppercase}
+
+.empty{border:1px dashed var(--line-strong); border-radius:var(--r); padding:26px 20px; text-align:center; color:var(--muted); background:var(--surface); display:flex; flex-direction:column; align-items:center; gap:10px}
+.empty .eh{font-family:var(--f-disp); font-weight:600; font-size:15px; color:var(--ink)}
+
+.banner{
+  display:flex; gap:9px; align-items:baseline; flex-wrap:wrap;
+  background:color-mix(in srgb, var(--st-hold) 11%, transparent);
+  border:1px solid color-mix(in srgb, var(--st-hold) 30%, transparent);
+  border-radius:var(--r); padding:8px 12px; font-size:12.5px; margin-bottom:14px;
+}
+.banner b{font-family:var(--f-disp); color:var(--st-hold)}
+.banner.info{background:color-mix(in srgb, var(--st-open) 11%, transparent); border-color:color-mix(in srgb, var(--st-open) 30%, transparent)}
+.banner.info b{color:var(--st-open)}
+
+/* rapor görünümü */
+.report-sec{margin-top:26px}
+.report-sec > h3{font-family:var(--f-disp); font-weight:700; font-size:16px; margin:0 0 10px; padding-bottom:5px; border-bottom:1px solid var(--line)}
+.report-meta{font-family:var(--f-mono); font-size:11px; color:var(--faint); margin-top:14px}
+
+/* iletişim kutusu */
+dialog{
+  border:1px solid var(--line-strong); border-radius:8px; padding:0;
+  background:var(--surface); color:var(--ink); box-shadow:0 24px 64px -24px rgba(0,0,0,.5);
+  width:min(560px, calc(100vw - 32px)); max-height:calc(100vh - 64px);
+}
+dialog::backdrop{background:rgba(10,12,16,.5)}
+dialog form{display:flex; flex-direction:column; max-height:inherit}
+dialog .dhead{padding:14px 18px 11px; border-bottom:1px solid var(--line)}
+dialog .dhead h3{font-family:var(--f-disp); font-weight:700; font-size:18px; margin:2px 0 0}
+dialog .dbody{padding:14px 18px; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; gap:11px}
+dialog .dfoot{padding:11px 18px; border-top:1px solid var(--line); display:flex; gap:8px; justify-content:flex-end; background:var(--surface-2); flex-wrap:wrap}
+.field{display:flex; flex-direction:column; gap:4px}
+.field.full{grid-column:1/-1}
+.field label{font-family:var(--f-disp); font-weight:600; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--faint)}
+.field input,.field select,.field textarea{padding:7px 9px; border:1px solid var(--line-strong); border-radius:var(--r); background:var(--paper); font-size:13.5px; width:100%}
+.field textarea{resize:vertical; min-height:68px; font-family:inherit}
+.dbody p{margin:0 0 4px; font-size:13px; color:var(--muted)}
+.dbody p.full{grid-column:1/-1}
+
+.backbtn{display:none}
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr}
+  .rail{border-right:0; border-bottom:1px solid var(--line)}
+  body.has-active .rail{display:none}
+  body:not(.has-active) .main{display:none}
+  .backbtn{display:inline-block}
+  .topbar .stats{display:none}
+  dialog .dbody{grid-template-columns:1fr}
+  .board{aspect-ratio:3/4}
+}
+
+/* ---------- yazdırma ---------- */
+@media print{
+  :root{--paper:#fff; --surface:#fff; --surface-2:#f4f4f4; --ink:#000; --muted:#333; --faint:#666; --line:#bbb; --line-strong:#888; --shadow:none}
+  .topbar,.rail,.tabs,.panel-head .btn,.tools,.icobtn,.backbtn,.dossier-head .actions .btn,.banner{display:none !important}
+  html,body{height:auto}
+  .layout{display:block}
+  .main{overflow:visible}
+  .wrap{max-width:none; padding:0}
+  .dossier-head{border:0; box-shadow:none}
+  .board{break-inside:avoid; min-height:0; aspect-ratio:16/9}
+  .item,.tl-item{break-inside:avoid}
+  .report-sec{break-inside:auto}
+  a[href]::after{content:""}
+}

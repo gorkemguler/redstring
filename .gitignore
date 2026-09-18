@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+node_modules/
+*.log
+# uygulamanın dışa aktardığı yedekler / exported backups
+redstring-*.json
+.claude/
