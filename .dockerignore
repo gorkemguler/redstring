@@ -1,0 +1,10 @@
+.git
+.github
+.claude
+README.md
+README.tr.md
+Dockerfile
+.dockerignore
+docker-compose.yml
+*.log
+redstring-*.json

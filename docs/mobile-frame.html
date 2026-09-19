@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- README'deki mobil ekran görüntüsünün kaynağı: uygulamayı sabit 390px genişlikte
+<!-- README'deki mobil ekran görüntülerinin kaynağı: uygulamayı sabit 390px genişlikte
      bir çerçeveye alır, böylece çekim tarayıcı pencere boyutundan etkilenmez.
      Source of the README's mobile screenshot: frames the app at a fixed 390px width
      so the capture does not depend on the browser's window size. -->
@@ -17,7 +17,13 @@
 </head>
 <body>
   <div class="phone">
-    <iframe src="../index.html?demo=1&lang=tr&tab=taraflar&theme=light" title="Redstring"></iframe>
+    <iframe id="app" title="Redstring"></iframe>
   </div>
+  <script>
+    /* ?lang=tr veya ?lang=en ile çağrılır / called with ?lang=tr or ?lang=en */
+    var dil = new URLSearchParams(location.search).get("lang") || "tr";
+    document.getElementById("app").src =
+      "../index.html?demo=1&tab=taraflar&theme=light&lang=" + encodeURIComponent(dil);
+  </script>
 </body>
 </html>

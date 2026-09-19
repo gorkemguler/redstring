@@ -9,6 +9,7 @@
      ?lang=tr|en    dili zorla / force the language
      ?tab=<id>      açılacak sekme / which tab to open
      ?theme=dark    temayı zorla / force the theme (dark | light)
+     ?focus=1       bağlantı şemasını tam ekran aç / open the link chart full screen
 */
 (function () {
   "use strict";
@@ -163,7 +164,7 @@
     cases: [], activeId: null, tab: params.get("tab") || "taraflar",
     filter: "hepsi", q: "",
     sub: { people: [], evidence: [], events: [], log: [], links: [] },
-    unsubSub: [], ilkAcilis: true
+    unsubSub: [], ilkAcilis: true, semaTam: false, focusSorildu: false
   };
 
   var elList    = document.getElementById("caseList");
@@ -457,16 +458,20 @@
     });
   }
 
-  function disaAktar() {
-    var blob = new Blob([JSON.stringify(repo.disaAktar(), null, 2)], { type: "application/json" });
+  function dosyaIndir(blob, ad) {
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = "redstring-" + bugun() + ".json";
+    a.download = ad;
     document.body.appendChild(a);
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+
+  function disaAktar() {
+    dosyaIndir(new Blob([JSON.stringify(repo.disaAktar(), null, 2)], { type: "application/json" }),
+               "redstring-" + bugun() + ".json");
   }
 
   elImport.addEventListener("change", function () {
@@ -715,7 +720,13 @@
       return '<div class="pin" data-pin="' + esc(p.__id) + '" style="--rc:' + r.c + "; left:" + (Number(p.x) || 50) +
         "%; top:" + (Number(p.y) || 50) + '%"><div class="pn">' + esc(p.ad) + '</div><div class="pr">' + esc(ad(r)) + "</div></div>";
     }).join("");
-    var h = '<div class="board" id="board"><svg aria-hidden="true">' + lines + "</svg>" + pins + "</div>";
+    var h = '<div class="boardwrap" id="boardwrap">' +
+      '<div class="boardbar"><span class="bb-title">' + esc(t("phSema")) + "</span>" +
+      '<span class="bb-hint">' + esc(t("tamEkranIpucu")) + "</span>" +
+      '<button class="btn sm" data-sema="svg">' + esc(t("semaIndirSvg")) + "</button>" +
+      '<button class="btn sm" data-sema="png">' + esc(t("semaIndirPng")) + "</button>" +
+      '<button class="btn sm primary" data-sema="kapat">' + esc(t("tamEkranKapat")) + "</button></div>" +
+      '<div class="board" id="board"><svg aria-hidden="true">' + lines + "</svg>" + pins + "</div></div>";
     if (state.sub.links.length) {
       h += '<div class="panel-head"><span class="eyebrow">' + esc(t("phBaglantilar")) + "</span></div>" +
         '<div class="cards">' + state.sub.links.map(function (l) {
@@ -759,10 +770,23 @@
     else if (tb === "kronoloji") h = panelHead(t("phKronoloji"), t("btnOlay"), "events") + secKronoloji(false);
     else if (tb === "saha")      h = panelHead(t("phSaha"), t("btnSaha"), "log") + secSaha(false);
     else if (tb === "sema")      h = panelHead(t("phSema"), t("btnBaglanti"), "link",
-                                     '<span class="hint">' + esc(t("semaIpucu")) + "</span>") + secSema(false);
+                                     '<span class="hint">' + esc(t("semaIpucu")) + "</span>" +
+                                     '<button class="btn sm" data-sema="tam">⤢ ' + esc(t("tamEkran")) + "</button>" +
+                                     '<button class="btn sm" data-sema="svg">' + esc(t("semaIndirSvg")) + "</button>" +
+                                     '<button class="btn sm" data-sema="png">' + esc(t("semaIndirPng")) + "</button>"
+                                     ) + secSema(false);
     else if (tb === "rapor")     h = secRapor();
     body.innerHTML = h;
     if (tb === "sema" || tb === "rapor") wireBoard();
+    /* ?focus=1 doğrudan tam ekran şemayla açar; yalnızca ilk çizimde.
+       ?focus=1 opens straight into the focus view, on the first render only. */
+    if (tb === "sema") {
+      if (params.get("focus") === "1" && !state.focusSorildu) {
+        state.focusSorildu = true;
+        state.semaTam = true;
+      }
+      uygulaTamEkran();
+    }
   }
 
   /* ======================== şema sürükleme ========================== */
@@ -823,6 +847,142 @@
         '<text x="' + ((a[0] + b[0]) / 2) + '%" y="' + ((a[1] + b[1]) / 2 - 1) + '%">' + esc(l.iliski || "") + "</text>";
     });
     svg.innerHTML = out;
+  }
+
+  /* ============== şema: tam ekran çalışma görünümü ve dışa aktarma ==============
+     Tam ekran, panoyu sayfanın üstüne alır; sürükleme aynı kodla çalışır.
+     Dışa aktarma panoyu DOM'dan kopyalamaz, veriden yeniden çizer — böylece
+     çıktı ekran boyutundan ve temadan bağımsız, sabit ölçülü olur.
+     Focus view lifts the board over the page; dragging uses the same code.
+     Export redraws the chart from the data rather than copying the DOM, so the
+     output has fixed dimensions regardless of screen size. */
+  var SEMA_W = 1400, SEMA_H = 900, KART_W = 200, KART_H = 56;
+
+  /* Tam ekran bir DOM sınıfı değil, durumdur: alt koleksiyon abonelikleri
+     tetiklendikçe sekme yeniden çizilir ve sınıf kaybolurdu.
+     Focus is state, not just a DOM class: the tab re-renders whenever a
+     subcollection snapshot lands, which would otherwise drop the class. */
+  function tamEkran(ac) {
+    state.semaTam = !!ac;
+    uygulaTamEkran();
+  }
+  function uygulaTamEkran() {
+    var w = document.getElementById("boardwrap"), ac = !!state.semaTam && !!w;
+    if (w) w.classList.toggle("focus", ac);
+    document.body.classList.toggle("sema-tam", ac);
+  }
+
+  function tokenRengi(ad, yedek) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(ad).trim();
+    return v || yedek;
+  }
+  function rolRengi(rol) {
+    var ham = lookup(I.ROLLER, rol).c;            /* "var(--st-hot)" */
+    return tokenRengi(ham.replace(/^var\(|\)$/g, ""), "#5B6472");
+  }
+  function xmlEsc(x) {
+    return String(x == null ? "" : x).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c];
+    });
+  }
+  /* uzun adı en çok iki satıra böl, taşarsa kısalt */
+  function adSatirlari(ad) {
+    var kelimeler = String(ad || "").split(/\s+/), satir = "", cikti = [];
+    kelimeler.forEach(function (k) {
+      if (!satir) { satir = k; return; }
+      if ((satir + " " + k).length <= 24) satir += " " + k;
+      else { cikti.push(satir); satir = k; }
+    });
+    if (satir) cikti.push(satir);
+    if (cikti.length > 2) { cikti = cikti.slice(0, 2); cikti[1] = cikti[1].slice(0, 21) + "…"; }
+    return cikti;
+  }
+
+  function semaSVG() {
+    var kisiler = state.sub.people;
+    if (!kisiler.length) return null;
+    var byId = {};
+    kisiler.forEach(function (p) { byId[p.__id] = p; });
+
+    var r = {
+      zemin: tokenRengi("--surface", "#ffffff"),
+      ip:    tokenRengi("--accent", "#A8322D"),
+      ink:   tokenRengi("--ink", "#181B21"),
+      soluk: tokenRengi("--faint", "#8A919C"),
+      cizgi: tokenRengi("--line-strong", "#C3C8D0"),
+      nokta: tokenRengi("--line", "#DCDFE4")
+    };
+    var F = "'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif";
+    var M = "'IBM Plex Mono', ui-monospace, Menlo, monospace";
+    function px(p) { return [(Number(p.x) || 50) / 100 * SEMA_W, (Number(p.y) || 50) / 100 * SEMA_H]; }
+
+    var o = [];
+    o.push('<svg xmlns="http://www.w3.org/2000/svg" width="' + SEMA_W + '" height="' + SEMA_H +
+           '" viewBox="0 0 ' + SEMA_W + " " + SEMA_H + '" font-family=' + JSON.stringify(F) + ">");
+    o.push('<defs><pattern id="nokta" width="26" height="26" patternUnits="userSpaceOnUse">' +
+           '<circle cx="1" cy="1" r="1" fill="' + r.nokta + '"/></pattern></defs>');
+    o.push('<rect width="100%" height="100%" fill="' + r.zemin + '"/>');
+    o.push('<rect width="100%" height="100%" fill="url(#nokta)"/>');
+
+    state.sub.links.forEach(function (l) {
+      var a = byId[l.a], b = byId[l.b];
+      if (!a || !b) return;
+      var A = px(a), B = px(b);
+      o.push('<line x1="' + A[0].toFixed(1) + '" y1="' + A[1].toFixed(1) + '" x2="' + B[0].toFixed(1) +
+             '" y2="' + B[1].toFixed(1) + '" stroke="' + r.ip + '" stroke-width="1.6" opacity="0.8"/>');
+      var mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2 - 6;
+      o.push('<text x="' + mx.toFixed(1) + '" y="' + my.toFixed(1) + '" font-family=' + JSON.stringify(M) +
+             ' font-size="12" fill="' + r.soluk + '" text-anchor="middle" paint-order="stroke" stroke="' +
+             r.zemin + '" stroke-width="4">' + xmlEsc(l.iliski || "") + "</text>");
+    });
+
+    kisiler.forEach(function (p) {
+      var P = px(p), x = P[0] - KART_W / 2, y = P[1] - KART_H / 2;
+      var satir = adSatirlari(p.ad), rol = lookup(I.ROLLER, p.rol);
+      var h = KART_H + (satir.length > 1 ? 15 : 0);
+      o.push('<g><rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + KART_W + '" height="' + h +
+             '" rx="5" fill="' + r.zemin + '" stroke="' + r.cizgi + '" stroke-width="1"/>');
+      o.push('<path d="M' + (x + 5).toFixed(1) + " " + (y + 1.5).toFixed(1) + "h" + (KART_W - 10) +
+             '" stroke="' + rolRengi(p.rol) + '" stroke-width="3" stroke-linecap="round"/>');
+      satir.forEach(function (sat, i) {
+        o.push('<text x="' + (x + KART_W / 2).toFixed(1) + '" y="' + (y + 24 + i * 15).toFixed(1) +
+               '" font-size="13.5" font-weight="600" fill="' + r.ink + '" text-anchor="middle">' + xmlEsc(sat) + "</text>");
+      });
+      o.push('<text x="' + (x + KART_W / 2).toFixed(1) + '" y="' + (y + h - 12).toFixed(1) +
+             '" font-family=' + JSON.stringify(M) + ' font-size="10" fill="' + r.soluk +
+             '" text-anchor="middle">' + xmlEsc(ad(rol).toLocaleUpperCase(dilBilgi().locale)) + "</text></g>");
+    });
+
+    var c = aktif();
+    o.push('<text x="24" y="' + (SEMA_H - 20) + '" font-family=' + JSON.stringify(M) + ' font-size="11" fill="' +
+           r.soluk + '">' + xmlEsc((c && c.kod ? c.kod + " · " : "") + (c && c.baslik ? c.baslik : "") +
+           " · Redstring") + "</text>");
+    o.push("</svg>");
+    return o.join("");
+  }
+
+  function semaIndir(bicim) {
+    var svg = semaSVG();
+    if (!svg) { window.alert(t("semaBosUyari")); return; }
+    var c = aktif();
+    var ad = ((c && c.kod) || "redstring") + "-sema";
+    if (bicim === "svg") {
+      dosyaIndir(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }), ad + ".svg");
+      return;
+    }
+    var img = new Image();
+    img.onload = function () {
+      var cv = document.createElement("canvas");
+      cv.width = SEMA_W * 2; cv.height = SEMA_H * 2;
+      var ctx = cv.getContext("2d");
+      ctx.scale(2, 2);
+      ctx.drawImage(img, 0, 0, SEMA_W, SEMA_H);
+      cv.toBlob(function (b) { if (b) dosyaIndir(b, ad + ".png"); });
+    };
+    img.onerror = function () {
+      dosyaIndir(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }), ad + ".svg");
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
   /* ========================== tema ve dil =========================== */
@@ -889,7 +1049,16 @@
 
   elDossier.addEventListener("click", function (ev) {
     var tb = ev.target.closest("[data-tab]");
-    if (tb) { state.tab = tb.getAttribute("data-tab"); renderDossier(); return; }
+    if (tb) { tamEkran(false); state.tab = tb.getAttribute("data-tab"); renderDossier(); return; }
+
+    var sm = ev.target.closest("[data-sema]");
+    if (sm) {
+      var k = sm.getAttribute("data-sema");
+      if (k === "tam") tamEkran(true);
+      else if (k === "kapat") tamEkran(false);
+      else semaIndir(k);
+      return;
+    }
 
     var act = ev.target.closest("[data-act]");
     if (act) {
@@ -940,6 +1109,10 @@
   });
 
   document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape" && document.body.classList.contains("sema-tam")) {
+      tamEkran(false);
+      return;
+    }
     if (ev.key === "/" && !dlg.open && document.activeElement !== elSearch &&
         !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
       ev.preventDefault();
