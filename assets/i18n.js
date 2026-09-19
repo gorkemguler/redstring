@@ -35,7 +35,7 @@ window.VM_I18N = (function () {
 
       seciliYokBaslik: "Soldan bir dosya seçin",
       seciliYokAlt: "Her vaka için taraflar, deliller, kronoloji, saha mesaisi ve bağlantı şeması tek dosyada tutulur.",
-      ornekEkle: "Örnek vaka ekle",
+      ornekEkle: "Örnek vakaları ekle",
 
       demoBaslik: "Demo",
       demoAlt: "Örnek veriyle açıldı; bu modda hiçbir şey kaydedilmez. Kendi dosyalarınız için adresten ?demo=1 kısmını çıkarın.",
@@ -162,7 +162,7 @@ window.VM_I18N = (function () {
 
       seciliYokBaslik: "Select a case file",
       seciliYokAlt: "Every case keeps its people, evidence, timeline, field hours and link chart in one file.",
-      ornekEkle: "Add sample case",
+      ornekEkle: "Add sample cases",
 
       demoBaslik: "Demo",
       demoAlt: "Opened with sample data; nothing is saved in this mode. Drop ?demo=1 from the address to keep your own files.",

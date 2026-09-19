@@ -18,6 +18,7 @@
   var THEME_KEY = "redstring.tema";
   var LANG_KEY  = "redstring.dil";
   var AYAR_KEY  = "redstring.ayarlar";
+  var SEED_KEY  = "redstring.ornekEklendi";
   var SCHEMA = 1;
   var SUBS = ["people", "evidence", "events", "log", "links"];
 
@@ -200,7 +201,13 @@
     var v = Number(n) || 0;
     return (v % 1 === 0 ? v : v.toFixed(1)) + (lang === "en" ? " h" : " sa");
   }
-  function bugun() { return new Date().toISOString().slice(0, 10); }
+  function bugun() { return gunOnce(0); }
+  /* n gün önce, yerel saate göre YYYY-AA-GG / n days ago, local time */
+  function gunOnce(n) {
+    var d = new Date(), p = function (x) { return String(x).padStart(2, "0"); };
+    d.setDate(d.getDate() - (Number(n) || 0));
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
   function simdi() {
     var d = new Date(), p = function (x) { return String(x).padStart(2, "0"); };
     return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + "T" + p(d.getHours()) + ":" + p(d.getMinutes());
@@ -479,16 +486,19 @@
   });
 
   function ornekVakaEkle() {
-    var id = "ornek-" + Date.now().toString(36);
-    var s = window.VM_SAMPLE(lang, { bugun: bugun() });
-    repo.put("cases", id, Object.assign({
-      kod: sonrakiKod(), durum: "sicak", oncelik: "yuksek", acilis: bugun(),
-      saatUcreti: 1500, avans: 25000, olusturma: new Date().toISOString()
-    }, s.vaka));
-    SUBS.forEach(function (n) {
-      (s[n] || []).forEach(function (row) { repo.put("cases/" + id + "/" + n, row[0], row[1]); });
+    var liste = window.VM_SAMPLE(lang, { gun: gunOnce });
+    var ilkId = null, damga = Date.now().toString(36);
+    liste.forEach(function (s, i) {
+      var id = "ornek-" + damga + "-" + i;
+      repo.put("cases", id, Object.assign({
+        kod: sonrakiKod(), olusturma: new Date().toISOString()
+      }, s.vaka));
+      SUBS.forEach(function (n) {
+        (s[n] || []).forEach(function (row) { repo.put("cases/" + id + "/" + n, row[0], row[1]); });
+      });
+      if (!ilkId) ilkId = id;
     });
-    selectCase(id, state.tab);
+    if (ilkId) selectCase(ilkId, state.tab);
   }
 
   /* ========================= çizim: vaka rayı ======================= */
@@ -951,5 +961,16 @@
     }
     renderDossier();
   });
-  if (DEMO && !state.cases.length) ornekVakaEkle();
+  /* İlk açılış: depo bomboşsa ve daha önce hiç tohumlanmadıysa örnek dosyaları
+     ekle; kullanıcı silerse geri gelmez. Demo modunda her zaman eklenir ve
+     hiçbir şey kaydedilmez.
+     First run: seed the sample files when the store is empty and has never been
+     seeded; they do not come back if the user deletes them. In demo mode they
+     are always added and nothing is persisted. */
+  if (DEMO) {
+    if (!state.cases.length) ornekVakaEkle();
+  } else if (!state.cases.length && yerelOku(SEED_KEY, "") !== "1") {
+    yerelYaz(SEED_KEY, "1");
+    ornekVakaEkle();
+  }
 })();

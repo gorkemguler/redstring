@@ -3,208 +3,216 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/gorkemguler/redstring/actions/workflows/deploy-pages.yml"><img src="https://img.shields.io/github/actions/workflow/status/gorkemguler/redstring/deploy-pages.yml?branch=main&label=yay%C4%B1n&color=1F6F6B" alt="Yayın durumu"></a>
-  <img src="https://img.shields.io/badge/license-MIT-A8322D" alt="MIT lisansı">
-  <img src="https://img.shields.io/badge/build-yok-181B21" alt="Derleme adımı yok">
+  <a href="https://github.com/gorkemguler/redstring/actions/workflows/deploy-pages.yml"><img src="https://img.shields.io/github/actions/workflow/status/gorkemguler/redstring/deploy-pages.yml?branch=main&label=deploy&color=1F6F6B" alt="Deployment status"></a>
+  <img src="https://img.shields.io/badge/license-MIT-A8322D" alt="MIT license">
+  <img src="https://img.shields.io/badge/build-none-181B21" alt="No build step">
   <img src="https://img.shields.io/badge/JavaScript-vanilla-f1e05a" alt="Vanilla JavaScript">
-  <img src="https://img.shields.io/badge/arayüz-TR%20%7C%20EN-1F6F6B" alt="Türkçe ve İngilizce arayüz">
-  <img src="https://img.shields.io/badge/veri-tarayıcıda-5B6472" alt="Veriler tarayıcıda saklanır">
-  <img src="https://img.shields.io/badge/bağımlılık-0-8A6414" alt="Bağımlılık yok">
+  <img src="https://img.shields.io/badge/interface-TR%20%7C%20EN-1F6F6B" alt="Turkish and English interface">
+  <img src="https://img.shields.io/badge/data-in%20browser-5B6472" alt="Data stays in the browser">
+  <img src="https://img.shields.io/badge/dependencies-0-8A6414" alt="No dependencies">
 </p>
 
 <p align="center">
-  <b>Türkçe</b> · <a href="README.en.md">English</a>
+  <a href="README.tr.md">Türkçe</a> · <b>English</b>
 </p>
 
 <p align="center">
-  <a href="https://gorkemguler.github.io/redstring/"><b>Uygulamayı aç →</b></a>&nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="https://gorkemguler.github.io/redstring/?demo=1">Örnek vakayla gez</a>
+  <a href="https://gorkemguler.github.io/redstring/?lang=en"><b>Open the app →</b></a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="https://gorkemguler.github.io/redstring/?demo=1&lang=en">Try it with the sample cases</a>
 </p>
 
 # Redstring
 
-Özel araştırmacılar için vaka dosyası sistemi. Her vaka için **taraflar, delil zinciri, olay
-kronolojisi, saha mesaisi ve bağlantı şeması** tek dosyada toplanır; dosya raporu tek tuşla
-yazdırılır.
+Case management for private investigators. Every case keeps its **people, chain of evidence,
+event timeline, field hours and link chart** in one file, and prints as a single case report.
 
-Adını, kişileri birbirine bağlayan panodaki kırmızı iplerden alıyor. Proje Türkçe *Vaka Masası*
-adıyla başladı; arayüz hâlâ tam Türkçe.
+A single-page static web app. No build step, no package manager, no dependencies and no server —
+opening `index.html` is enough.
 
-Tek sayfalık statik bir web uygulaması. Derleme adımı, paket yöneticisi, bağımlılık ve sunucu
-yok — `index.html` dosyasını açmak yeterli.
+Named after the red string that runs between people on the link chart. The project began in
+Turkish as *Vaka Masası* — "case desk" — and the interface still ships in both languages.
 
-## Meslektaşlar için: nasıl kullanılır
+## For fellow investigators: how to use it
 
-Kurulum yok, üyelik yok, ücret yok. **<https://gorkemguler.github.io/redstring/>** adresini açın ve ilk dosyanızı oluşturun.
+No installation, no account, no fee. Open **<https://gorkemguler.github.io/redstring/?lang=en>**
+and start working.
 
-Kayıtlarınız **sizin tarayıcınızda** kalır; ne bize ne başka birine gider — bu sitenin arkasında
-bir sunucu yok. Dolayısıyla aynı adresi kullanan iki araştırmacı birbirinin dosyalarını görmez.
-Tek sorumluluk sizde: düzenli olarak **Veri → JSON olarak indir** ile yedek alın.
+The first time you open it, four worked sample cases are already there — a warehouse theft
+inquiry, a missing person, an insurance claim verification and a closed background check, one for
+each case status. Every name in them is fictional and each file says so at the top. Delete them
+whenever you like; they will not come back.
 
-Önce bir gezinmek isterseniz <https://gorkemguler.github.io/redstring/?demo=1> adresi örnek bir vakayla açılır ve hiçbir şey
-kaydetmez.
+Your records stay **in your own browser**; they reach neither us nor anyone else — there is no
+server behind this site. Two investigators using the same address never see each other's files.
+That puts the responsibility on you: take regular backups with **Data → Download as JSON**.
+
+To look around without keeping anything,
+<https://gorkemguler.github.io/redstring/?demo=1&lang=en> opens with the same samples and saves
+nothing at all.
 
 ---
 
-## Ekran görüntüleri
+## Screenshots
 
-### Vaka künyesi ve taraflar
+### Case header and people
 
-Dosya açılır açılmaz müvekkil, durum, öncelik ve mali özet üstte görünür; saha mesaisi ile
-masraftan hakediş kendiliğinden hesaplanır. Sol raydaki her kartın kenarındaki renk şeridi
-önceliği gösterir.
+Client, status, priority and the financial summary sit at the top the moment a file opens, and
+the billable total is worked out from field hours and expenses. The coloured edge on each card in
+the left rail marks its priority.
 
-![Vaka künyesi ve taraflar sekmesi](docs/screenshots/01-dossier-tr.png)
+![Case header and the people tab](docs/screenshots/02-dossier-en.png)
 
-### Delil kayıt defteri
+### Evidence register
 
-Her delil, delil zincirinin gerektirdiği alanlarla kaydedilir: nereden elde edildi, kim teslim
-aldı, şu an nerede saklanıyor.
+Every item is logged with the fields a chain of custody needs: where it came from, who received
+it, and where it is stored right now.
 
-![Delil kayıt defteri](docs/screenshots/03-evidence-en.png)
+![Evidence register](docs/screenshots/03-evidence-en.png)
 
-### Olay kronolojisi
+### Event timeline
 
-Gözlem, görüşme ve olaylar saatiyle işlenir; çizelge en yeniden eskiye kendiliğinden dizilir.
+Observations, interviews and incidents go in with their times; the timeline orders itself newest
+first.
 
-![Olay kronolojisi](docs/screenshots/04-timeline-en.png)
+![Event timeline](docs/screenshots/04-timeline-en.png)
 
-### Bağlantı şeması
+### Link chart
 
-Dosyadaki kişiler bir panoya yerleşir, aralarındaki ilişkiler kırmızı iplerle çizilir. Kartlar
-sürüklenerek düzenlenir, konumları dosyayla birlikte saklanır.
+People on the file sit on a board with red string drawn between them. Drag the cards to arrange
+them — their positions are saved with the case.
 
-![Bağlantı şeması](docs/screenshots/05-link-chart.png)
+![Link chart](docs/screenshots/05-link-chart.png)
 
-### Saha mesaisi ve masraf dökümü
+### Field hours and expenses
 
-Vardiyalar ve masraflar tabloya girilir; alt toplam satırı saat ücretiyle birlikte hakedişi verir.
+Shifts and expenses go into a table; the footer row applies the hourly rate and gives the
+billable total.
 
-![Saha kaydı tablosu](docs/screenshots/06-field-log-en.png)
+![Field log table](docs/screenshots/06-field-log-en.png)
 
-### Dosya raporu
+### Case report
 
-Bütün bölümler tek sayfada toplanır. Yazdır düğmesi tarayıcının PDF çıktısını da verir; yazdırma
-sırasında arayüz gizlenir, yalnızca dosya içeriği basılır.
+Every section on one page. Print gives you the browser's PDF output; the interface is hidden
+during printing so only the case content goes on paper.
 
-![Dosya raporu](docs/screenshots/07-report-en.png)
+![Case report](docs/screenshots/07-report-en.png)
 
-### İngilizce arayüz ve mobil görünüm
+### Turkish interface and mobile layout
 
-Arayüz üstteki **TR / EN** düğmesiyle anında değişir; seçim tarayıcıda hatırlanır. Dar ekranda
-liste ve dosya ayrı görünümlere ayrılır.
+The **TR / EN** button switches the interface instantly and the choice is remembered. On a narrow
+screen the list and the case file become separate views.
 
-| İngilizce | Mobil |
+| Turkish | Mobile |
 |---|---|
-| ![İngilizce arayüz](docs/screenshots/02-dossier-en.png) | ![Mobil görünüm](docs/screenshots/08-mobile-tr.png) |
+| ![Turkish interface](docs/screenshots/01-dossier-tr.png) | ![Mobile layout](docs/screenshots/08-mobile-tr.png) |
 
 ---
 
-## Neler var
+## What's in it
 
-| Bölüm | İçerik |
+| Section | Contents |
 |---|---|
-| **Künye** | Dosya no, müvekkil, durum, öncelik, saat ücreti, avans; saha mesaisi ve masraftan hakediş otomatik |
-| **Taraflar** | Müvekkil / şüpheli / tanık / mağdur / ilgili kayıtları, eşkâl ve iletişim bilgisiyle |
-| **Deliller** | Delil zinciri alanları: nereden elde edildi, kim teslim aldı, nerede saklanıyor |
-| **Kronoloji** | Saatli olay çizelgesi, en yeniden eskiye |
-| **Saha Kaydı** | Vardiya ve masraf dökümü, alt toplam satırıyla |
-| **Bağlantı Şeması** | Kişileri kırmızı iplerle bağlayan sürüklenebilir pano |
-| **Dosya Raporu** | Tüm bölümler tek sayfada; yazdırılır veya PDF'e çıkar |
+| **Header** | File no, client, status, priority, hourly rate, retainer; billable total derived from hours and expenses |
+| **People** | Client / subject / witness / victim / other, with descriptions and contact details |
+| **Evidence** | Chain-of-custody fields: where it came from, who received it, where it is stored |
+| **Timeline** | Time-stamped event log, newest first |
+| **Field Log** | Shifts and expenses with a totals row |
+| **Link Chart** | A draggable board connecting people with red string |
+| **Case Report** | Every section on one page; prints or exports to PDF |
 
-Ayrıca: vaka arama ve duruma göre filtreleme (`/` tuşu arama kutusuna atlar), Türkçe/İngilizce
-arayüz, açık–koyu–sistem teması, para birimi ayarı, JSON yedek alma ve geri yükleme, birden fazla
-sekme arasında anlık eşitleme, tanımak için tek tuşla eklenen örnek vaka.
+Also: case search and status filters (`/` jumps to the search box), Turkish/English interface,
+light–dark–system theme, configurable currency symbol, JSON backup and restore, live sync between
+open tabs, and sample cases you can re-add with one click.
 
 ---
 
-## Veriler nerede duruyor
+## Where the data lives
 
-**Kayıtlar yalnızca tarayıcınızın `localStorage` alanında tutulur.** Hiçbir veri sunucuya
-gönderilmez; arkasında bir sunucu yoktur. Pratikte bunun anlamı:
+**Records are kept in your browser's `localStorage` and nowhere else.** Nothing is sent to a
+server; there is no server behind this. In practice:
 
-- Kayıtlar **o cihaza ve o tarayıcıya** bağlıdır; başka bilgisayarda görünmez.
-- Tarayıcı site verisini temizlerseniz kayıtlar silinir.
-- Gizli sekmede kayıt kalıcı olmaz — uygulama bunu üstte uyarı şeridiyle bildirir.
-- Ekipçe eşzamanlı çalışma yoktur; aynı cihazda açık sekmeler birbirini anında günceller.
+- Records belong to **that device and that browser**; they do not appear on another machine.
+- Clearing site data deletes them.
+- Nothing persists in a private window — the app says so with a banner at the top.
+- There is no real-time collaboration; tabs open on the same device update each other instantly.
 
-Bu yüzden **Veri → JSON olarak indir** ile düzenli yedek alın. Aynı menüden yedeği başka bir
-cihazda geri yükleyebilir, mevcut kayıtlarla birleştirebilir veya onların yerine koyabilirsiniz.
+So take regular backups with **Data → Download as JSON**. The same menu restores a backup on
+another device, either merging it into the existing records or replacing them.
 
 > [!IMPORTANT]
-> **Kişisel veri uyarısı.** Uygulama gerçek kişilere ait veri barındırır. KVKK kapsamında veri
-> sorumlusu sizsiniz: cihaz disk şifrelemesini açık tutun, yedek JSON dosyalarını şifreli bir
-> alanda saklayın, saklama süresi dolan dosyaları silin. Ortak kullanılan bir bilgisayarda
-> uygulamayı ayrı bir tarayıcı profilinde çalıştırın.
+> **Personal data.** This app holds information about real people. Under GDPR, KVKK and comparable
+> regimes you are the data controller: keep device disk encryption on, store backup JSON files in
+> an encrypted location, and delete files once their retention period ends. On a shared computer,
+> run the app in a separate browser profile.
 
 ---
 
-## Çalıştırma
+## Running it
 
-`index.html` dosyasına çift tıklamak yeterli. Yerel sunucu tercih ederseniz:
+Double-click `index.html`. If you prefer a local server:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Sonra <http://localhost:8080> adresini açın.
+Then open <http://localhost:8080>.
 
-## GitHub Pages'te yayınlama
+## Publishing on GitHub Pages
 
-Depoda `.github/workflows/deploy-pages.yml` hazır. **Settings → Pages → Build and deployment →
-Source** ayarını **GitHub Actions** yapın; `main` dalına her gönderimde site yayınlanır.
+`.github/workflows/deploy-pages.yml` is ready to go. Set **Settings → Pages → Build and deployment
+→ Source** to **GitHub Actions**, and every push to `main` publishes the site.
 
-İş akışını kullanmak istemezseniz aynı ekrandaki **Deploy from a branch → main / (root)**
-seçeneği de çalışır; bu durumda workflow dosyasını silebilirsiniz.
+If you would rather not use the workflow, **Deploy from a branch → main / (root)** on the same
+screen works too; delete the workflow file in that case.
 
-> Depo herkese açıksa siteniz de herkese açık olur. Uygulama **boş** yayınlanır — kayıtlar
-> ziyaretçinin kendi tarayıcısında oluşur, sizin vakalarınız siteye yüklenmez. Yine de gerçek
-> dosyalarla çalışırken depoyu private tutmanız önerilir.
+> A public repository means a public site. The app publishes **empty** — records are created in
+> each visitor's own browser and your cases are never uploaded. Even so, keep the repository
+> private when you work real files in it.
 
 ---
 
-## URL parametreleri
+## URL parameters
 
-Adres çubuğundan uygulamanın açılışını yönlendirebilirsiniz. Demo bağlantısı paylaşmak veya
-belge için ekran görüntüsü almak bunlarla yapılır.
+You can steer how the app opens from the address bar. This is how demo links are shared and how
+the screenshots above were produced.
 
-| Parametre | Değer | Ne yapar |
+| Parameter | Values | Effect |
 |---|---|---|
-| `demo` | `1` | Örnek vakayla açar ve **hiçbir şeyi kaydetmez** — tanıtım için |
-| `lang` | `tr`, `en` | Arayüz dilini zorlar |
-| `theme` | `light`, `dark` | Temayı zorlar |
-| `tab` | `taraflar`, `deliller`, `kronoloji`, `saha`, `sema`, `rapor` | Açılacak sekme |
+| `demo` | `1` | Opens with the sample cases and **saves nothing** — for demos |
+| `lang` | `tr`, `en` | Forces the interface language |
+| `theme` | `light`, `dark` | Forces the theme |
+| `tab` | `taraflar`, `deliller`, `kronoloji`, `saha`, `sema`, `rapor` | Which tab to open |
 
-Örnek: `index.html?demo=1&lang=en&tab=sema&theme=dark`
+Example: `index.html?demo=1&lang=en&tab=sema&theme=dark`
 
 ---
 
-## Dosya düzeni
+## Project layout
 
 ```
-index.html              uygulama kabuğu
-assets/app.css          tema değişkenleri, yerleşim, yazdırma stilleri
-assets/app.js           veri katmanı (localStorage), görünümler, formlar
-assets/i18n.js          arayüz metinleri ve dile göre çözülen listeler
-assets/sample.js        örnek vaka (TR + EN)
-docs/banner-source.html README başlığındaki banner'ın kaynağı
-docs/mobile-frame.html  mobil ekran görüntüsü için sabit genişlikli çerçeve
-.github/workflows/      GitHub Pages yayın akışı
+index.html              application shell
+assets/app.css          theme tokens, layout, print styles
+assets/app.js           data layer (localStorage), views, forms
+assets/i18n.js          interface strings and the lists resolved per language
+assets/sample.js        the four sample cases (TR + EN)
+docs/banner-source.html source of the README banner
+docs/mobile-frame.html  fixed-width frame used for the mobile screenshot
+.github/workflows/      GitHub Pages deployment
 ```
 
-Bağımlılık yok; tek dış kaynak Google Fonts üzerinden gelen IBM Plex ailesi. İnternet olmadan da
-çalışır, yalnızca yazı tipleri sistem yazı tipine düşer.
+No dependencies; the only external resource is the IBM Plex family from Google Fonts. It works
+offline too — the type simply falls back to a system font.
 
-## Yeni dil eklemek
+## Adding a language
 
-1. `assets/i18n.js` içindeki `STR` nesnesine aynı anahtarlarla yeni bir blok ekleyin.
-2. Aynı dosyadaki `DILLER` dizisine dili yazın: `{ id, ad, locale, kodOnek }`.
-3. Durum, öncelik, sıfat, delil türü ve olay türü listelerindeki her kayda dil kodunuzla bir
-   etiket ekleyin — kimlikler (`id`) değişmez, veri onlarla saklanır.
-4. İsterseniz `assets/sample.js` içine o dilde bir örnek vaka ekleyin.
+1. Add a block with the same keys to the `STR` object in `assets/i18n.js`.
+2. List the language in `DILLER` in the same file: `{ id, ad, locale, kodOnek }`.
+3. Add a label in your language code to every entry in the status, priority, role, evidence-type
+   and event-type lists — the ids never change, because that is what the data stores.
+4. Optionally add sample cases in that language to `assets/sample.js`.
 
-Arayüzde yeni dil, üstteki dil düğmesinin sırasına kendiliğinden katılır.
+The new language joins the rotation of the language button automatically.
 
-## Lisans
+## License
 
-MIT — bkz. [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
